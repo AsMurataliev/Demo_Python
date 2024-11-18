@@ -24,7 +24,6 @@ def read_root():
 
 
 @app.post("/")
-def create_order(order = Body()): 
+def create_order(order = Body()):
     repo.append(order)
-    return repo
-    
+    return order
