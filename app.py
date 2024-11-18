@@ -24,6 +24,30 @@ def read_root():
 
 
 @app.post("/")
-def create_order(order = Body()):
+def create_order(data = Body()):
+    order = Order(
+        data["number"],
+        data["day"],
+        data["month"],
+        data["year"],
+        data["device"],
+        data["problem_type"],
+        data["description"],
+        data["client"],
+        data["status"]
+    )
     repo.append(order)
     return order
+
+@app.put("/{number}")
+def update_order(number, dto = Body()):
+    isEmpty = True
+    for order in repo:
+        if order.number == int(number):
+            isEmpty= False
+            order.status = dto["status"]
+            order.description = dto["description"]
+            order.master = dto["master"]
+            return order
+    if isEmpty:
+        return "Order not found"
