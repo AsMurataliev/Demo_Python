@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Body
  
 class Order:
     def __init__(self, number, day, month, year, device, problem_type, description, client, status):
@@ -24,7 +24,7 @@ def read_root():
 
 
 @app.post("/")
-def create_order(order = Order):
+def create_order(order = Body()): 
     repo.append(order)
     return repo
     
