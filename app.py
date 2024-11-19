@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Body
  
 class Order:
-    def __init__(self, number, day, month, year, device, problem_type, description, client, status):
+    def __init__(self, number, day, month, year, device, problem_type, description, client, status,master):
         self.number = number
         self.day = day
         self.month = month
@@ -11,8 +11,9 @@ class Order:
         self.description = description
         self.client = client
         self.status = status
+        self.master = master
 
-order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "not ready")
+order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "not ready", "Oleg")
 
 repo = []
 repo.append(order)
@@ -34,7 +35,8 @@ def create_order(data = Body()):
         data["problem_type"],
         data["description"],
         data["client"],
-        data["status"]
+        data["status"],
+        data["master"]
     )
     repo.append(order)
     return order
