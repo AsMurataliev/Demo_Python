@@ -1,12 +1,14 @@
 from fastapi import FastAPI, Body
- 
+from datetime import datetime
+
+def complete_order():
+    return [upd for upd in repo if upd.status == "completed"]
 #Сущность
 class Order:
     def __init__(self, number, day, month, year, device, problem_type, description, client, status,):
         self.number = number
-        self.day = day
-        self.month = month
-        self.year = year
+        self.startDate = datetime(day, month, year)
+        self.endDate = None
         self.device = device
         self.problem_type = problem_type
         self.description = description
@@ -70,6 +72,8 @@ def update_order(number, dto = Body()):
             if(order.status != dto["status"]):
                 isUpdatedStatus= True
                 message += "Order status number " + str(order.number) + " changed"
+                if(order.status == "completed"):
+                    order.endDate == datetime.now()
         if(order.status != dto["status"]):
             order.status = dto["status"]
         if(order.description != dto["description"]):
@@ -98,7 +102,7 @@ def get_by_param(param):
 #количество всех выполненых заявок.
 @app.get("/completeCounts")
 def complete_counts():
-    return [upd for upd in repo if upd.status == "completed"]
+    return len(complete_order())
 
 #Статистика по типам не исправностей.
 @app.get("/problemTypes")
@@ -112,4 +116,14 @@ def problem_types():
     return result
 
 
-#Среднее выполнение заявки
+#Среднее выполнение заявки.
+@app.get("/average")
+def average():
+    completed = complete_counts()
+    times = []
+    for upd in completed:
+        times.append(upd.endDate - upd.startDate)
+    time_sum = sum([t.days for t in times]) #время завершение каждой заявки. В днях. В сумме сколько дней выполнялась заявка.
+    ord_count = complete_counts() #количество выполненных заявок.
+    result = time_sum / ord_count
+    return result
