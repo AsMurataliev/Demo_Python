@@ -15,7 +15,7 @@ class Order:
         self.master = "not assigned"
         self.comments = []
 
-order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "not ready", "Oleg")
+order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "completed", "Oleg")
 
 #Уведомление об изменении статуса заказа.
 isUpdatedStatus = False
@@ -94,3 +94,22 @@ def get_by_number(number):
 @app.get("/filter/{param}")
 def get_by_param(param):
     return [upd for upd in repo if upd.device == param or upd.problem_type == param or upd.description == param or upd.client == param or upd.status == param or upd.master == param]
+
+#количество всех выполненых заявок.
+@app.get("/completeCounts")
+def complete_counts():
+    return [upd for upd in repo if upd.status == "completed"]
+
+#Статистика по типам не исправностей.
+@app.get("/problemTypes")
+def problem_types():
+    result = {}
+    for upd in repo:
+        if upd.problem_type in result:
+            result[upd.problem_type] += 1
+        else:
+            result[upd.problem_type] = 1
+    return result
+
+
+#Среднее выполнение заявки
