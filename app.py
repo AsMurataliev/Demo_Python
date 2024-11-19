@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Body
 from datetime import datetime
-
+from fastapi.middleware.cors import CORSMiddleware
 #количество завершеных заявок.
 def complete_order():
     return [upd for upd in repo if upd.status == "completed"]
@@ -30,6 +30,12 @@ repo.append(order)
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allo_headers=["*"]
+)
 #Получвение всех заказов.
 @app.get("/")
 def get_orders():
