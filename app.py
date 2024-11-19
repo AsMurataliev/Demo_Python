@@ -12,7 +12,7 @@ class Order:
         self.description = description
         self.client = client
         self.status = status
-        self.master = master
+        self.master = "not assigned"
 
 order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "not ready", "Oleg")
 
@@ -69,10 +69,13 @@ def update_order(number, dto = Body()):
             if(order.status != dto["status"]):
                 isUpdatedStatus= True
                 message += "Order status number " + str(order.number) + " changed"
+        if(order.status != dto["status"]):
             order.status = dto["status"]
+        if(order.description != dto["description"]):
             order.description = dto["description"]
+        if(order.master != dto["master"]):
             order.master = dto["master"]
-            return order
+        return order
     if isEmpty:
         return "Order not found"
     
