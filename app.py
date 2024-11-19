@@ -2,7 +2,7 @@ from fastapi import FastAPI, Body
  
 #Сущность
 class Order:
-    def __init__(self, number, day, month, year, device, problem_type, description, client, status,master):
+    def __init__(self, number, day, month, year, device, problem_type, description, client, status,):
         self.number = number
         self.day = day
         self.month = month
@@ -13,6 +13,7 @@ class Order:
         self.client = client
         self.status = status
         self.master = "not assigned"
+        self.comments = []
 
 order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "not ready", "Oleg")
 
@@ -75,6 +76,8 @@ def update_order(number, dto = Body()):
             order.description = dto["description"]
         if(order.master != dto["master"]):
             order.master = dto["master"]
+        if(dto["comments"] != None):
+            order.comments.append(dto["comments"])
         return order
     if isEmpty:
         return "Order not found"
