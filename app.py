@@ -1,5 +1,6 @@
 from fastapi import FastAPI, Body
  
+#Сущность
 class Order:
     def __init__(self, number, day, month, year, device, problem_type, description, client, status,master):
         self.number = number
@@ -15,15 +16,30 @@ class Order:
 
 order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "not ready", "Oleg")
 
+#Уведомление об изменении статуса заказа.
+isUpdatedStatus = False
+message = ""
+isEmpty = True
+
 repo = []
 repo.append(order)
 
 app = FastAPI()
+
+#Получвение всех заказов.
 @app.get("/")
 def read_root():
-    return repo
+    global isUpdatedStatus
+    global message
+    if(isUpdatedStatus):
+        upd = message
+        isUpdatedStatus = False
+        message= ""
+        return repo, upd
+    else:
+        return repo
 
-
+#Добавление нового заказа.
 @app.post("/")
 def create_order(data = Body()):
     order = Order(
@@ -41,12 +57,18 @@ def create_order(data = Body()):
     repo.append(order)
     return order
 
+#Изменение заказа по номеру
 @app.put("/{number}")
 def update_order(number, dto = Body()):
-    isEmpty = True
+    global isUpdatedStatus
+    global message
+    global isEmpty
     for order in repo:
         if order.number == int(number):
             isEmpty= False
+            if(order.status != dto["status"]):
+                isUpdatedStatus= True
+                message += "Order status number " + str(order.number) + " changed"
             order.status = dto["status"]
             order.description = dto["description"]
             order.master = dto["master"]
@@ -54,7 +76,7 @@ def update_order(number, dto = Body()):
     if isEmpty:
         return "Order not found"
     
-
+#Получение заказов по номеру.
 @app.get("/number/{number}")
 def get_by_number(number):
     for order in repo:
@@ -62,7 +84,7 @@ def get_by_number(number):
             return order
     return "Order not found"
 
-
+#Получение 
 @app.get("/filter/{param}")
 def get_by_param(param):
     return [upd for upd in repo if upd.device == param or upd.problem_type == param or upd.description == param or upd.client == param or upd.status == param or upd.master == param]
