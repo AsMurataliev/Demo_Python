@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Список заявок</title>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Номер</th>
+            <th>Дата начала работы</th>
+            <th>Дата окочания работы</th>
+            <th>Оборудование</th>
+            <th>Тип проблемы</th>
+            <th>Описание</th>
+            <th>Статус</th>
+            <th>Мастер</th>
+        </tr>
+    </table>
+    <script>
+        let table = document.querySelector("table");
+        GetOrders();// вызов функции
+
+        async function GetOrders(){
+            let response = await fetch("http://127.0.0.1:8000/", {method:"GET"});
+            let orders = await response.json();
+
+            orders.forEach(x => {
+                let tr = document.createElement("tr");// создание таблицы
+                let numberTd = document.createElement("td");// создание ячеек
+                numberTd.append(x.number);// добавление номера 
+                tr.append(numberTd);// добавление ячеек
+
+                let startDateTd = document.createElement("td");// создание ячеек
+                startDateTd.append(x.start_date);// добавление даты начала
+                tr.append(startDateTd);// добавление ячеек
+            });
+
+        };
+    </script>
+</body>
+</html>
