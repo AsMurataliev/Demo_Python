@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Body
 from datetime import datetime
 
+#количество завершеных заявок.
 def complete_order():
     return [upd for upd in repo if upd.status == "completed"]
 #Сущность
@@ -119,7 +120,7 @@ def problem_types():
 #Среднее выполнение заявки.
 @app.get("/average")
 def average():
-    completed = complete_counts()
+    completed = complete_order()
     times = []
     for upd in completed:
         times.append(upd.endDate - upd.startDate)
