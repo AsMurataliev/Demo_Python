@@ -53,3 +53,16 @@ def update_order(number, dto = Body()):
             return order
     if isEmpty:
         return "Order not found"
+    
+
+@app.get("/number/{number}")
+def get_by_number(number):
+    for order in repo:
+        if order.number == int(number):
+            return order
+    return "Order not found"
+
+
+@app.get("/filter/{param}")
+def get_by_param(param):
+    return [upd for upd in repo if upd.device == param or upd.problem_type == param or upd.description == param or upd.client == param or upd.status == param or upd.master == param]
