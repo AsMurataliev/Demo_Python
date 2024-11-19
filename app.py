@@ -32,7 +32,7 @@ app = FastAPI()
 
 #Получвение всех заказов.
 @app.get("/")
-def read_root():
+def get_orders():
     global isUpdatedStatus
     global message
     if(isUpdatedStatus):
