@@ -6,9 +6,9 @@ def complete_order():
     return [upd for upd in repo if upd.status == "completed"]
 #Сущность
 class Order:
-    def __init__(self, number, day, month, year, device, problem_type, description, client, status,):
+    def __init__(self, number, year, month, day, device, problem_type, description, client, status):
         self.number = number
-        self.startDate = datetime(day, month, year)
+        self.startDate = datetime(year, month, day)
         self.endDate = None
         self.device = device
         self.problem_type = problem_type
@@ -18,7 +18,7 @@ class Order:
         self.master = "not assigned"
         self.comments = []
 
-order = Order(1, 18,11,2024, "iphone", "window", "1", "Vasya", "completed", "Oleg")
+order = Order(1, 2024, 11, 19, "lol", "dsa", "dsad", "dsad", "dsad")
 
 #Уведомление об изменении статуса заказа.
 isUpdatedStatus = False
@@ -48,9 +48,9 @@ def read_root():
 def create_order(data = Body()):
     order = Order(
         data["number"],
-        data["day"],
-        data["month"],
         data["year"],
+        data["month"],
+        data["day"],
         data["device"],
         data["problem_type"],
         data["description"],
